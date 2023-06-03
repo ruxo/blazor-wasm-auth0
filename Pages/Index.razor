@@ -1,11 +1,13 @@
 ﻿@page "/"
 @using System.Security.Claims
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager NavManager
 @inject AuthenticationStateProvider AuthState
 
 <AuthorizeView>
    <Authorized>
       <h1>Hello @user.Identity.Name</h1>
-      <div><a href="/logout">Logout</a></div>
+      <div><a href="#" @onclick="Logout" @onclick:preventDefault>Logout</a></div>
       <table>
          <tr><th>Type</th><th>Value</th><th>Value Type</th><th>Props count</th></tr>
          @foreach (var claim in user.Claims) {
@@ -34,7 +36,7 @@
    <NotAuthorized>
       <p>Please login</p>
       <div>
-         <a href="/login">Login</a>
+         <a href="#" @onclick="Login" @onclick:preventDefault>Login</a>
       </div>
    </NotAuthorized>
 </AuthorizeView>
@@ -53,6 +55,14 @@
    protected override async Task OnInitializedAsync() {
       var authState = await AuthState.GetAuthenticationStateAsync();
       user = authState.User;
+   }
+
+   void Login() {
+      NavManager.NavigateToLogin("authentication/login");
+   }
+
+   void Logout() {
+      NavManager.NavigateToLogout("/authentication/logout", "/");
    }
 
 }
