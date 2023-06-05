@@ -5,6 +5,11 @@ Blazor WASM is different from the server project. There's no Auth0 library for W
 so the generic OIDC library (`Microsoft.AspNetCore.Components.WebAssembly.Authentication`)
 is used instead.
 
+<div style="color: orange">
+<b>Important</b>: Don't forget to set "Application Type" of the Auth0 Application to "Single Page Application"
+               since the Blazor WASM standalone project is an SPA.
+</div>
+
 **Steps**:
 1. Add a Nuget package `Microsoft.AspNetCore.Components.WebAssembly.Authentication` into the project.
    * The package is actually for OIDC/OAuth2 authentication, this case we use Auth0
@@ -35,6 +40,16 @@ to be done on Auth0 side (setting Redirect URIs and Logout URIs -- see the origi
 for guidance). However, since WASM is client side, so the authentication is PKCE flow, which
 is handled by the library. To login/logout, use extension methods `NavigateToLogin` and
 `NavigateToLogout`, see `Index.razor` about how to login/logout using such methods.
+
+# Access Token
+In order to obtain the access token, Auth0 mandates the use of an API Audience. This means you need to set up
+an API in Auth0 and create an identity for the API's audience. Subsequently, assign the audience name into
+the `AdditionalProviderParameters`, refer to `Program.cs` for usage.
+
+## Retrieve the token
+The OIDC library has `IAccessTokenProvider` service with method `RequestAccessToken` for retrieving the access
+token. However, ID token is not exposed and may need many hooks so this example doesn't include it. See `Index.razor`
+on how to get the access token.
 
 # See also
 * [Blazor Server with Auth0 abridge version](https://github.com/ruxo/blazor-server-auth0)

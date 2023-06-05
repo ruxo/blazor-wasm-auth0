@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @inject NavigationManager NavManager
 @inject AuthenticationStateProvider AuthState
+@inject IAccessTokenProvider TokenProvider
 
 <AuthorizeView>
    <Authorized>
@@ -32,6 +33,15 @@
             </tr>
          }
       </table>
+      
+      @if (accessToken is not null) {
+         <h1>Access Token</h1>
+         <table>
+            <tr><th>Expiration</th><td>@accessToken.Expires.ToLocalTime().ToString("f")</td></tr>
+            <tr><th>Scopes</th><td>@string.Join(", ",accessToken.GrantedScopes)</td></tr>
+         </table>
+         <pre style="white-space: pre-wrap; word-wrap: break-word">@accessToken.Value</pre>
+      }
    </Authorized>
    <NotAuthorized>
       <p>Please login</p>
@@ -41,6 +51,7 @@
    </NotAuthorized>
 </AuthorizeView>
 
+<hr/>
 <footer>
    This is a simplified version of 
    <a href="https://learn.microsoft.com/en-us/aspnet/core/blazor/security/webassembly/standalone-with-authentication-library">
@@ -51,10 +62,16 @@
 @code {
 
    ClaimsPrincipal user = new (new ClaimsIdentity());
+   AccessToken? accessToken;
 
    protected override async Task OnInitializedAsync() {
       var authState = await AuthState.GetAuthenticationStateAsync();
       user = authState.User;
+
+      var result = await TokenProvider.RequestAccessToken();
+      Console.WriteLine($"Result status = {result.Status}");
+      var canGet = result.TryGetToken(out accessToken);
+      Console.WriteLine($"Can get = {canGet}");
    }
 
    void Login() {
