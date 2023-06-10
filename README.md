@@ -51,5 +51,7 @@ The OIDC library has `IAccessTokenProvider` service with method `RequestAccessTo
 token. However, ID token is not exposed and may need many hooks so this example doesn't include it. See `Index.razor`
 on how to get the access token.
 
-# See also
+# Additional Resources
 * [Blazor Server with Auth0 abridge version](https://github.com/ruxo/blazor-server-auth0)
+* [Auth0 with Blazor Server using OpenIdConnect library](https://github.com/ruxo/blazor-server-oidc-auth0)
+* [Auth0 with Blazor Hosted solution - Abridge version](https://github.com/ruxo/blazor-hosted-auth0)
